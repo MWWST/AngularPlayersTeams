@@ -1,0 +1,29 @@
+<div class="containter" ng-controller="TeamsController">
+	<div class="row">	
+		<div class="col-sm-12">
+			<form id="teamform">
+				<div class="form-group">
+				<input type="text" class="form-control" name="teamname" id="teamname" ng-model="newTeam.name">
+
+				</div>
+				<button class="btn btn-success" ng-click="addTeam()">Add Team</button>
+			</form>
+		<div>
+	</div>	
+	<div class="row">
+		<div class="col-sm-12">
+			<table class=" table table-responsive">
+				<thead>
+					<th>Team Name</th>
+					<th>Actions</th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="team in teams track by $index">
+						<td ng-bind="team.team"></td>
+						<td><button class="btn btn-danger" ng-click="destroyTeam(team)">Remove Team</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

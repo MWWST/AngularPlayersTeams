@@ -1,0 +1,38 @@
+<div class="container" ng-controller="AssociationsController">
+	<div class="row">	
+		<div class="col-sm-12">
+			<form class="form">
+				<div class="form-group">
+					<label> Select Player</label>
+				<select class="form-control" ng-model="newAssociation.player">
+					<option ng-repeat="tplayer in teamplayers track by $index">{{tplayer.Name}}</option>
+				</select>
+				<label> Select Team</label>
+				<select class="form-control" ng-model="newAssociation.team">
+					<option ng-repeat="team in allteams track by $index">{{team.team}}</option>
+				</select>
+
+				</div>
+				<button class="btn btn-success" ng-click="addAssociation(newAssociation)">Add Player to Team</button>
+			</form>
+		<div>
+	</div>	
+	<div class="row">
+		<div class="col-sm-12">
+			<table class="table table-responsive">
+				<thead>
+					<th>Name</th>
+					<th>Team</th>
+					<th>Actions</th>
+				</thead>
+				<tbody>
+						<tr ng-repeat="player in associations track by $index">
+						<td ng-bind="player.Name"></td>
+						<td ng-bind="player.Team"></td>
+						<td><button class="btn btn-danger" ng-click="destroyAssociation(player)">Remove Player</button></td>
+						</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

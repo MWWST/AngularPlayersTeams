@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+ <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.min.js"></script>
+
+    
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</script>
+
+<script type="text/javascript">
+
+var teamApp = angular.module('teamApp', ['ngRoute']);
+    //  use the config method to set up routing:
+    teamApp.config(function ($routeProvider) {
+      $routeProvider
+        .when('/',{
+            templateUrl: 'partials/players.html'
+        })
+        .when('/teams',{
+            templateUrl: 'partials/teams.html'
+        })
+         .when('/associations',{
+            templateUrl: 'partials/associations.html'
+        })
+        .otherwise({
+          redirectTo: '/'
+        });
+    });
+
+
+
+
+
+    teamApp.factory('playerFactory',function(){
+     var players = [
+      {Name: 'Speros'},
+      {Name: 'Jimmy'},
+      {Name: 'Joy'}
+     ];
+
+
+   
+      var factory ={};
+
+      factory.getPlayers = function(callback){
+        callback(players);
+      }
+
+      factory.addPlayer = function(data){
+        players.push(data);
+      }
+
+      factory.destroy = function(data){
+        
+        players.splice(data,1);
+      }
+
+      return factory;
+
+    })
+
+    teamApp.factory('associationFactory',function(){
+    var teams =[{team:'Seahawks'},{team:'49ers'}]	
+    
+    var associations = [{Name:'Speros',Team:'Seahawks'}];
+   
+      var factory ={};
+
+      factory.getTeams = function(callback){
+        callback(teams);
+      }
+
+      factory.addAssociation = function(data){
+        associations.push(data);
+      }
+
+      factory.getAssociations = function(callback){
+        callback(associations);
+      
+        	}
+      factory.addTeam = function(data){
+        teams.push(data);
+      }
+
+      factory.destroyTeam = function(data){
+        
+        teams.splice(data,1);
+      }
+
+      factory.destroyAssociation = function(data){
+        
+        associations.splice(data,1);
+      }
+
+  
+ return factory;
+
+})
+
+teamApp.controller('PlayersController', function ($scope,playerFactory) {
+      $scope.players=[];
+  
+      playerFactory.getPlayers(function(data){
+        $scope.players=data;
+        console.log('scope players',$scope.players)
+      
+      })
+
+
+      $scope.addPlayer=function(){
+        var Newplayer = {Name:$scope.newPlayer.name};
+
+        playerFactory.addPlayer(Newplayer);
+        $scope.newplayert={};
+      }
+
+      $scope.removePlayer=function(player){
+        console.log(player)
+
+        var delPlayer = $scope.players.indexOf(player);
+        playerFactory.destroy(delPlayer);
+
+
+
+      }
+
+
+    })
+
+teamApp.controller('TeamsController', function ($scope,associationFactory) {
+      $scope.teams=[];
+  
+      // playerFactory.getPlayers(function(data){
+      //   $scope.players=data;
+      //   console.log('scope players',$scope.players)
+      
+      // })
+
+      associationFactory.getTeams(function(data){
+      	$scope.teams=data;
+      	console.log('scope teams',$scope.teams)
+      })
+
+
+      $scope.addTeam=function(){
+        var newTeam = {team:$scope.newTeam.name};
+
+        associationFactory.addTeam(newTeam);
+        $scope.newTeam={};
+      }
+
+      $scope.destroyTeam=function(team){
+        console.log(team)
+
+        var delTeam = $scope.teams.indexOf(team);
+        associationFactory.destroyTeam(delTeam);
+
+
+
+      }
+
+
+    })
+
+teamApp.controller('AssociationsController', function ($scope,playerFactory,associationFactory) {
+      $scope.associations=[];
+  
+      associationFactory.getAssociations(function(data){
+        $scope.associations=data;
+        console.log('scope players',$scope.associations)
+      
+      })
+
+        playerFactory.getPlayers(function(data){
+        $scope.teamplayers=data;
+        console.log('scope players',$scope.teamplayers)
+      })
+
+        associationFactory.getTeams(function(data){
+        	$scope.allteams=data;
+        })
+
+
+      $scope.addAssociation=function(){
+      	console.log($scope.newAssociation);
+        var newAssociation = {Name:$scope.newAssociation.player,Team:$scope.newAssociation.team,};
+
+        associationFactory.addAssociation(newAssociation);
+        $scope.newAssociation={};
+      }
+
+      $scope.destroyAssociation=function(association){
+        console.log(association)
+
+        var delAssociation = $scope.associations.indexOf(association);
+        associationFactory.destroyAssociation(delAssociation);
+
+
+
+      }
+
+
+    })
+
+</script>
+
+</head>
+  <div ng-app='teamApp'>
+        <a href="#/">Players</a> | <a href="#/teams">Teams</a> | <a href="#/associations">Associations</a>
+        <div ng-view="">
+        </div>
+    </div>
